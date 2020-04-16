@@ -1,6 +1,15 @@
 %{
 #include <stdio.h>
-#include "lex.yy.c"
+#include <stdlib.h>
+#include <stdarg.h>
+#include <string.h>
+#include "node.h"
+#include "tabid.h"
+
+int yylex();
+void evaluate(Node *p);
+void yyerror(char *s);
+int lbl;
 %}
 
 %union {
@@ -11,15 +20,40 @@
 };
 
 %token <i> INTEGER
-%token <s> STRING VARIABLE
+%token <s> STRING ID
 %token <array> ARRAY
-%token PROGRAM MODULE START END VOID CONST NUMBER ARRAY STRING FUNCTION PUBLIC FORWARD IF ELSE ELIF
-%token FI FOR UNTILL STEP DO DONE REPEAT STOP RETURN
+%token PROGRAM MODULE START END VOID CONST NUMBER ARRAY STRING FUNCTION PUBLIC FORWARD IF THEN ELSE
+%token ELIF FI FOR UNTIL STEP DO DONE REPEAT STOP RETURN
+
+%right ASG
+%left '|'
+%left '&'
+%nonassoc '~'
+%left EQ NE
+%left '>' '<' GE LE 
+%left '+' '-'
+%left '*' '/' '%'
+%right '^'
+%nonassoc UMINUS LOC '?'
+%nonassoc '(' ')' '[' ']'
+
 
 %%
 
-start: { ECHO; }
-;
+file: ;
 
 %%
 
+
+char *mklbl(int n) {
+  static char buf[20];
+  sprintf(buf, "_i%d", n);
+  return strdup(buf);
+}
+
+char **yynames =
+#if YYDEBUG > 0
+		 (char**)yyname;
+#else
+		 0;
+#endif

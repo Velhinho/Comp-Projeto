@@ -1,5 +1,5 @@
 LANG=minor
-EXT=spl# file extension: .$(EXT)
+EXT=min# file extension: .$(EXT)
 LIB=lib# compiler library directory
 UTIL=util# compiler library: lib$(LIB).a
 RUN=run# runtime directory
@@ -12,14 +12,24 @@ LD=ld -m elf_i386
 
 .SUFFIXES: .asm $(EXT)
 
-$(LANG): minor.y minor.l code.brg
+$(LANG): minor.y minor.l
+	make -C $(LIB)
 	byacc -dv minor.y
-	flex -ld minor.l
-	$(CC) -o $(LANG) $(CFLAGS) -lfl lex.yy.c y.tab.c
+	flex -dl minor.l
+	$(CC) $(CFLAGS) -I$(LIB) lex.yy.c y.tab.c -L$(LIB) -l$(UTIL) -o $(LANG)
 
+examples:: $(LANG)
+	make -C $(EXS)
+
+run:: $(LANG)
+	make -C $(EXS) run
+
+%: %.asm
+	$(AS) $*.asm
+	$(LD) -o $@ $*.o $(LDLIBS)
 
 clean::
 	make -C $(LIB) clean
 	make -C $(RUN) clean
 	make -C $(EXS) clean
-	rm -f *.o $(LANG) lib$(LANG).a lex.yy.c y.tab.c y.tab.h y.tab.h.gch y.output yyselect.c *.asm *~
+	rm -f *.o $(LANG) lib$(LANG).a lex.yy.c y.tab.c y.tab.h y.output yyselect.c *.asm *~

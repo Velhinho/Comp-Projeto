@@ -1,4 +1,4 @@
-EXT=.spl
+EXT=.min
 EXE=../minor
 LIB=../libminor.a
 AS=nasm -felf32
