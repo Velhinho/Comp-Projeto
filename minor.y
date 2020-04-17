@@ -37,9 +37,8 @@ int lbl;
 %nonassoc UMINUS LOC '?'
 %nonassoc '(' ')' '[' ']'
 
-%type <n> expr literals literal declarations declaration function
+%type <n> expr literals literal declarations declaration
 %type <n> qualifier variableDeclaration variable type
-
 %%
 
 /* FALTA MODULE */
@@ -56,7 +55,8 @@ body: variables
     | variables instructions
 ;
 
-instructions: instruction | instructions instruction
+instructions: instruction       
+    | instructions instruction
 ;
 
 instruction: ifInstruction
@@ -103,17 +103,17 @@ declarations: declaration { $$ = $1; }
     | declaration ';' declarations { $$ = binNode(';', $1, $3); }
 ;
 
-declaration: function                       { $$ = $1; }
-    | qualifier CONST variableDeclaration   { $$ = binNode(CONST, $1, $3); }
+declaration: qualifier CONST variableDeclaration   { $$ = binNode(CONST, $1, $3); }
     | qualifier variableDeclaration         { $$ = binNode(0, $1, $2); }
     | CONST variableDeclaration             { $$ = uniNode(CONST, $2); }
 ;
 
-function: FUNCTION qualifier type ID variables DONE 
-    | FUNCTION qualifier type ID variables DO body
-    | FUNCTION qualifier VOID ID variables DONE
-    | FUNCTION qualifier VOID ID variables DO body
-    | FUNCTION type ID variables DONE
+/*
+function: FUNCTION qualifier type ID variables DONE     { $$ = pentaNode()}
+    | FUNCTION qualifier type ID variables DO body      {}
+    | FUNCTION qualifier VOID ID variables DONE         {}
+    | FUNCTION qualifier VOID ID variables DO body      {}
+    | FUNCTION type ID variables DONE                   {}
     | FUNCTION type ID variables DO body
     | FUNCTION VOID ID variables DONE
     | FUNCTION VOID ID variables DO body
@@ -126,7 +126,7 @@ function: FUNCTION qualifier type ID variables DONE
     | FUNCTION VOID ID DONE
     | FUNCTION VOID ID DO body
 ;
-
+*/
 qualifier: PUBLIC   { $$ = nilNode(PUBLIC); }
     | FORWARD       { $$ = nilNode(FORWARD); }
 ;
