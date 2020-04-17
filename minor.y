@@ -37,10 +37,13 @@ int lbl;
 %nonassoc UMINUS LOC '?'
 %nonassoc '(' ')' '[' ']'
 
+%type <n> expr literals literal declarations declaration function
+%type <n> qualifier variableDeclaration variable type
+
 %%
 
 /* FALTA MODULE */
-file: program   {evaluate($1); free($1);}
+file: program
 ;
 
 program: PROGRAM declarations START body END
@@ -80,35 +83,30 @@ elseExpr: ELSE
     | ELSE instructions
 ;
 
-expr: ID
-	| literals
-	| '[' INTEGER ']'
-	| '-' expr %prec UMINUS
-	| expr '+' expr
-	| expr '-' expr
-	| expr '*' expr
-	| expr '/' expr
-	| expr '%' expr
-	| expr '^' expr
-	| expr '<' expr
-	| expr '>' expr
-	| expr GE expr
-	| expr LE expr
-	| expr NE expr
-	| expr EQ expr
-	| '(' expr ')'
-	| '?' expr
-	| '&' expr
+expr: ID                      { if (IDfind($1, 0) < 0) $$ = 0; else $$ = strNode(ID, $1); }
+	| literals                { $$ = $1; }
+	| '-' expr %prec UMINUS   { $$ = uniNode(UMINUS, $2); }
+	| expr '+' expr			  { $$ = binNode('+', $1, $3); }
+	| expr '-' expr			  { $$ = binNode('-', $1, $3); }
+	| expr '*' expr			  { $$ = binNode('*', $1, $3); }
+	| expr '/' expr			  { $$ = binNode('/', $1, $3); }
+	| expr '%' expr			  { $$ = binNode('%', $1, $3); }
+	| expr '<' expr			  { $$ = binNode('<', $1, $3); }
+	| expr '>' expr			  { $$ = binNode('>', $1, $3); }
+	| expr GE expr			  { $$ = binNode(GE, $1, $3); }
+	| expr LE expr			  { $$ = binNode(LE, $1, $3); }
+	| expr NE expr			  { $$ = binNode(NE, $1, $3); }
+	| expr EQ expr			  { $$ = binNode(EQ, $1, $3); }
 	;
 
-declarations: declaration 
-    | declaration ';' declarations
+declarations: declaration { $$ = $1; }
+    | declaration ';' declarations { $$ = binNode(';', $1, $3); }
 ;
 
-declaration: function 
-    | qualifier CONST variableDeclaration
-    | qualifier variableDeclaration
-    | CONST variableDeclaration
+declaration: function                       { $$ = $1; }
+    | qualifier CONST variableDeclaration   { $$ = binNode(CONST, $1, $3); }
+    | qualifier variableDeclaration         { $$ = binNode(0, $1, $2); }
+    | CONST variableDeclaration             { $$ = uniNode(CONST, $2); }
 ;
 
 function: FUNCTION qualifier type ID variables DONE 
@@ -129,29 +127,34 @@ function: FUNCTION qualifier type ID variables DONE
     | FUNCTION VOID ID DO body
 ;
 
-qualifier: PUBLIC | FORWARD
+qualifier: PUBLIC   { $$ = nilNode(PUBLIC); }
+    | FORWARD       { $$ = nilNode(FORWARD); }
 ;
 
-type: NUMBER | STRING | ARRAY
+type: NUMBER        { $$ = nilNode(NUMBER); }
+    | STRING        { $$ = nilNode(STRING); }
+    | ARRAY         { $$ = nilNode(ARRAY); }
 ;
 
-variables: variable | variable  %prec ';' variables
+variables: variable 
+    | variable  %prec ';' variables
 ;
 
-variable: type ID
-    | type ID '[' INTEGER ']'
+variable: type ID               { IDnew($1->attrib, $2, (void*)IDtest); }
+    | type ID '[' INTEGER ']'   { IDnew($1->attrib, $2, (void*)IDtest); }
 ;
 
-variableDeclaration: variable
-    | variable ASG literals
+variableDeclaration: variable   { $$ = $1; }
+    | variable ASG literals     { $$ = binNode(ASG, $1, $3); }
 ;
 
-literals: literal
-    | literal literals
-    | literal ',' literals
+literals: literal           { $$ = $1; }
+    | literal ',' literals  { $$ = binNode(',', $1, $3); }
 ;
 
-literal: INTEGER | STRING | CHAR
+literal: INTEGER    { $$ = intNode(INTEGER, $1); }
+    | STRING        { $$ = strNode(STRING, $1); }
+    | CHAR          { $$ = strNode(STRING, $1); }
 ;
 
 %%
