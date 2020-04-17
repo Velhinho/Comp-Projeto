@@ -91,14 +91,14 @@ endString \"
  /* 2.3 Identifiers */
 <CODE>{id} { yylval.s = dupstr(yytext); return ID; }
 
-<CODE>[1-9]{digit}* { yylval.i = strtol(yytext, 0, 10); return INTEGER; }
-<CODE>{decimalBase}{decimalDigit}+ {/*return DECIMAL;*/}
-<CODE>{octalBase}{octalDigit}* { yylval.i = strtol(yytext, NULL, 8); return INTEGER; }
-<CODE>{hexaBase}{hexaDigit}+ { yylval.i = strtol(yytext, NULL, 16); return INTEGER; }
-<CODE>{binaryBase}{binaryDigit}+ { yylval.i = strtol(yytext, NULL, 2); return INTEGER; }
+<CODE>[1-9]{digit}*                     { yylval.i = strtol(yytext, 0, 10); return INTEGER; }
+<CODE>{decimalBase}{decimalDigit}+      {/*return DECIMAL;*/}
+<CODE>{octalBase}{octalDigit}*          { yylval.i = strtol(yytext, NULL, 8); return INTEGER; }  /* includes 0 */
+<CODE>{hexaBase}{hexaDigit}+            { yylval.i = strtol(yytext, NULL, 16); return INTEGER; }
+<CODE>{binaryBase}{binaryDigit}+        { yylval.i = strtol(yytext, NULL, 2); return INTEGER; }
 
-<CODE>{initChar}([^\\\^\']|{specialChar}|{hexaChar}){endChar} { yytext[yyleng-1] = 0; yylval.s = dupstr(yytext+1); return CHAR; }
-<CODE>{initString}([^\"]|"\\\"")*{endString} { yytext[yyleng-1] = 0; yylval.s = dupstr(yytext+1); return STRING; }
+<CODE>{initChar}([^\\\^\']|{specialChar}|{hexaChar}){endChar}   { yytext[yyleng-1] = 0; yylval.s = dupstr(yytext+1); return CHAR; }
+<CODE>{initString}([^\"]|"\\\"")*{endString}                    { yytext[yyleng-1] = 0; yylval.s = dupstr(yytext+1); return STRING; }
 
  /* 2.7 Delimiters */
 <CODE>[#\[\]();!,] return *yytext;
