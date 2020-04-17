@@ -8,4 +8,6 @@ a.out
 yyselect.c
 .*.swp
 core
-*.out
+exs/*.out
+minor
+

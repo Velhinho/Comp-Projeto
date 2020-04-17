@@ -97,7 +97,7 @@ endString \"
 <CODE>{hexaBase}{hexaDigit}+ { yylval.i = strtol(yytext, NULL, 16); return INTEGER; }
 <CODE>{binaryBase}{binaryDigit}+ { yylval.i = strtol(yytext, NULL, 2); return INTEGER; }
 
-<CODE>{initChar}([^\\\^\']|{specialChar}|{hexaChar}){endChar} { yytext[yyleng-1] = 0; yylval.s = dupstr(yytext+1); return STRING; }
+<CODE>{initChar}([^\\\^\']|{specialChar}|{hexaChar}){endChar} { yytext[yyleng-1] = 0; yylval.s = dupstr(yytext+1); return CHAR; }
 <CODE>{initString}([^\"]|"\\\"")*{endString} { yytext[yyleng-1] = 0; yylval.s = dupstr(yytext+1); return STRING; }
 
  /* 2.7 Delimiters */
