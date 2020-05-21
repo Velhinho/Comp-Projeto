@@ -45,7 +45,12 @@ decls: gdecls  1 {}
 gdecls: DECL(gdecls, decl)  1 {}
 gdecls: DECL(NIL, decl)  1 {}
 
+decl: VAR(vardecl)  1 {}
 decl: NIL  1 {}
+
+vardecl: NUMBER(ID, eqint)  1 {}
+
+eqint: NIL  1 {}
 
 chars: CHARS(NIL, char)  1 {}
 chars: CHARS(chars, char)  1 {}

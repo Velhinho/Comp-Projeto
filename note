@@ -1,0 +1,41 @@
+ ( PROGRAM: NIL:
+  ( FUNCTION:
+    ( END: ID:"main" INT:41)
+    ( FARGS: NIL:
+      ( START: NIL:
+        ( ';': NIL:
+          ( '!':
+            ( CHARS: NIL: STR:"olá pessoal!
+")))))))
+[#16]
+0x561225b1ff70: line 42: decls: NIL
+0x561225b20010: line 59: instrs: NIL
+0x561225b20060: line 54: char: STR
+0x561225b20100: line 50: chars: CHARS(NIL,char)
+0x561225b20100: line 64: expr: chars
+0x561225b20160: line 62: instr: BANG(expr)
+0x561225b201c0: line 60: instrs: STMT(instrs,instr)
+0x561225b20270: line 57: main: START(NIL,instrs)
+0x561225b204e0: line 39: file: PROGRAM(decls,FUNCTION(END(ID,INT),FARGS(NIL,main)))
+
+
+ ( PROGRAM: NIL:
+  ( FUNCTION:
+    ( END: ID:"main" INT:41)
+    ( FARGS: NIL:
+      ( START: NIL:
+        ( ';': NIL:
+          ( '!':
+            ( CHARS: NIL: STR:"olá pessoal!
+")))))))
+[#16]
+0x0x55f70118c480:FUNCTION NO MATCH decl: FUNCTION(END(ID,INT),FARGS(fvars,eqbody)) with cost 65535 vs. 32767
+0x55f70118bf70: line 42: decls: NIL
+0x55f70118c010: line 70: instrs: NIL
+0x55f70118c060: line 64: char: STR
+0x55f70118c100: line 60: chars: CHARS(NIL,char)
+0x55f70118c100: line 75: expr: chars
+0x55f70118c160: line 73: instr: BANG(expr)
+0x55f70118c1c0: line 71: instrs: STMT(instrs,instr)
+0x55f70118c270: line 68: main: START(NIL,instrs)
+0x55f70118c4e0: line 39: file: PROGRAM(decls,FUNCTION(END(ID,INT),FARGS(NIL,main)))
