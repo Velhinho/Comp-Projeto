@@ -40,6 +40,32 @@ file: PROGRAM(decls, FUNCTION(END(ID, INT), FARGS(NIL, main)))  1 {}
 file: MODULE(decls)  1 {}
 
 decls: NIL  1 {}
+decls: gdecls  1 {}
+
+gdecls: DECL(gdecls, decl)  1 {}
+gdecls: DECL(NIL, decl)  1 {}
+
+decl: VAR(vardecl)  1 {}
+decl: FUNCTION(END(ID, INT), FARGS(fvars, eqbody))   1 {}
+decl: FUNCTION(END(ID, INT), FARGS(NIL, eqbody))  1 {}
+decl: NIL  1 {}
+
+fvar: NUMBER(ID, NIL)  1 {}
+fvar: STRING(ID, NIL)  1 {}
+fvar: ARRAY(ID, INTS(INT, NIL))  1 {}
+
+fvars: ARGS(NIL, fvar)  1 {}
+fvars: ARGS(fvars, fvar)  1 {}
+
+vardecl: NUMBER(ID, eqint)  1 {}
+vardecl: STRING(ID, eqstr)  1 {}
+vardecl: ARRAY(ID, INTS(INT, eqvec))
+
+eqint: NIL  1 {}
+eqint: INT  1 {}
+
+eqstr: NIL  1 {}
+eqstr: chars  1 {}
 
 chars: CHARS(NIL, char)  1 {}
 chars: CHARS(chars, char)  1 {}
@@ -47,7 +73,23 @@ chars: CHARS(chars, char)  1 {}
 char: CHAR  1 {}
 char: STR  1 {}
 
+eqvec: NIL  1 {}
+eqvec: ints  1 {}
+
+ints: INT  1 {}
+ints: INT  1 {}
+ints: INTS(ints, INT)  1 {}
+
+eqbody: NIL  1 {}
+eqbody: body  1 {}
+
 main: START(NIL, instrs)  1 {}
+
+body: START(fvars, STMT(instrs, ret)) 1 {}
+body: START(NIL, STMT(instrs, ret))  1 {}
+
+ret: RETURN(NIL)  1 {}
+ret: NIL  1 {}
 
 instrs: NIL  1 {}
 instrs: STMT(instrs, instr)  1 {}

@@ -10,4 +10,4 @@ yyselect.c
 core
 exs/*.out
 minor
-.asm
+*.asm
